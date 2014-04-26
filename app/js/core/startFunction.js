@@ -24,14 +24,21 @@ module.exports = function startFn() {
  * @param {object} instance the current instance's configuration
  */
 function addAdvice(context, instance){
-    var destinationFunction, 
-        targetFunction, 
-        advice, 
-        adviceType, 
-        key, 
-        keySplit,
-        thisInstance = this.instance(instance.name);
+    var thisInstance = this.instance(instance.name)
+        ,adviceType
+        ,keySplit
+        ,targetInstance
+        ,targetFunction
+        ,advice
+        ;
 
+    // go through each instance.aop
+    if ( instance.advice != null ) {
+        for ( adviceType in instance.advice ) {
+            iterateOverAdviceTypes.call(this);
+        }
+    }
+    // - - - - - -
     function iterateOverAdviceTypes() {
         for ( adviceKey in instance.advice[adviceType] ) {
             if ( (keySplit = adviceKey.split('.')).length > 1 ) {
@@ -98,59 +105,16 @@ function addAdvice(context, instance){
         }.bind(this));
     }
 
-    function getAdvice(type, instance, callback) {
-        var adv = {};
-        return adv[type] = instance[callback], adv;
-    }
-
-    /**
-     * Iterate over the current advice object
-     */
+    // Iterate over the current advice object
     function iterateAdviceObject(callback) {
-        var adviceValuePair;
-        for ( adviceValuePair in instance.advice[adviceType][adviceKey] )
-            callback(adviceValuePair, instance.advice[adviceType][adviceKey][adviceValuePair]);
+        for ( var adviceValuePair in instance.advice[adviceType][adviceKey] )
+            callback(
+                adviceValuePair, instance.advice[adviceType][adviceKey][adviceValuePair]
+            );
     }
 
-    // go through each instance.aop
-    if ( instance.advice != null ) {
-        for ( adviceType in instance.advice ) {
-            iterateOverAdviceTypes.call(this);
-        }
+    function getAdvice(type, instance, callbackName) {
+        var adv = {};
+        return adv[type] = instance[callbackName], adv;
     }
 }
-
-
-
-// var example1 = {
-//     after: { // after invoking function
-//         'targetFunction': { // on instance
-//             // on other                  // do fn
-//             'use.destinationInstance': 'destinationFunction' 
-//         }
-//     }
-// }
-// var example3 = {
-//     before: { // before instance invokes
-//         'targetFunction': {
-//             // on other        // invoke
-//             'TargetInstance': 'destinationFunction'
-//         }
-//     }
-// }
-// var example2 = {
-//     after: { // after other object
-//         'use.destinationInstance': {
-//             // invokes        // on instance call
-//             'targetFunction': 'destinationFunction'
-//         }
-//     }
-// }
-// var example2 = {
-//     after: { // after other object
-//         'TargetInstance': {
-//             // invokes        // on instance call
-//             'targetFunction': 'destinationFunction'
-//         }
-//     }
-// }
