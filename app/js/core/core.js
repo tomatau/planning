@@ -88,17 +88,24 @@ function instanceFn(name) {
 /*
 
 laws of form:
+#############
+it would be nice if everything tried to adhere to the natural form we see
+fibonacci of how trees and rivers seem to branch out, etc..
 
-1 - loader  = curl / require / ?
-2 - core    = function, config
-2 - start   = app, register
-2 - config  = useCase, extension
-3 - app     = ui, entity, module
-5 - module  = config, useCase, submodule, start, tmpl
-- extension = 7
+size ~ return from previous ~ things provided
 
+1 - loading
+1 - moduleLoader
+2 - core        = config, function
+3 - app         = ui-useCase, root context, start
+3 - defaults    = register, instance, module
+ / gateway, aop, (promises, comms, dom, events )
+
+3 - config      = useCases, extensions, entities
+5 - module      = config, useCase, entities, models, views
 
 // thinking...
+#############
 var config = {
     // map singleton usecase object literals directly onto app
     useCase: {

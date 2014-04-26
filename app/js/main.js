@@ -1,5 +1,4 @@
 curl( [
-    'utilities/log',
     'main'
 ], start, fail );
 

@@ -18,7 +18,7 @@ UI = function(app){
         hide: function(item){
             this.trigger.apply(this, ['hide:' + item].concat(argsToArr(arguments, 1)) );
         },
-        trigger: function(name){}
+        trigger: function(name){} // could extend a base entity class
     }
 };
 

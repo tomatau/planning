@@ -1,5 +1,8 @@
 var config;
 
+// EXAMPLE CONFIG
+
+
 // pieces
 var RestGateway = require('extensions/gateway.rest.js'), // optional
     DOM = 'DOM', // optional

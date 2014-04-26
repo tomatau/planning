@@ -10,7 +10,7 @@ MeldAop = function AopFn(app){
 module.exports = MeldAop;
 
 api = {
-    _super: meld, // mainly for testing
+    _super: meld, // used in testing
     before: function(){
         return this._super.before.apply(this._super, arguments);
     },
