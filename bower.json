@@ -1,0 +1,88 @@
+{
+  "name": "playing",
+  "version": "0.0.0",
+  "authors": [
+    "Thomas Hudspith-Tatham <iammotivated@gmail.com>"
+  ],
+  "license": "WTFGPL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/js/lib/vendor",
+    "app/test",
+    "app/tests"
+  ],
+  "dependencies": {
+    "jquery": "latest",
+    "meld": "~1.3.0",
+    "curl": "~0.8.10",
+    "underscore": "latest",
+    "mocha": "~1.18.2",
+    "cajon": "~0.2.0",
+    "chai": "~1.9.1",
+    "sinon-chai": "~2.5.0",
+    "sinon-builds": "~1.8.2"
+  },
+  "install": {
+    "path": {
+      "scss": "app/css/scss/vendor",
+      "js": "app/js/_vendor"
+    },
+    "ignore": [
+      "mocha", "sinon", "sinon-builds", "chai", "sinon-chai"
+    ],
+    "sources": {
+      "curl": {
+        "mapping": [
+          {
+            "bower_components/curl/src/curl.js": "curl.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/_fetchText.js": "plugin/_fetchText.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/async.js": "plugin/async.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/css.js": "plugin/css.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/domReady.js": "plugin/domReady.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/i18n.js": "plugin/i18n.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/js.js": "plugin/js.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/json.js": "plugin/json.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/locale.js": "plugin/locale.js"
+          },
+          {
+            "bower_components/curl/src/curl/plugin/text.js": "plugin/text.js"
+          },
+          {
+            "bower_components/curl/src/curl/loader/legacy.js": "loader/legacy.js"
+          },
+          {
+            "bower_components/curl/src/curl/loader/cjsm11.js": "loader/cjsm11.js"
+          }
+        ]
+      },
+      "jquery": [
+        "bower_components/jquery/dist/jquery.js"
+      ],
+      "meld": [
+        "bower_components/meld/meld.js"
+      ],
+      "underscore": [
+        "bower_components/underscore/underscore.js"
+      ]
+    }
+  }
+}

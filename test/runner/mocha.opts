@@ -1,0 +1,5 @@
+--reporter nyan
+--ui bdd
+--recursive
+--require bower_components/curl/dist/curl-for-ssjs/curl.js
+--require test/mocha.config.js
