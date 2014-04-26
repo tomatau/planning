@@ -31,7 +31,7 @@
       "js": "app/js/_vendor"
     },
     "ignore": [
-      "mocha", "sinon", "sinon-builds", "chai", "sinon-chai"
+      "mocha", "sinon", "sinon-builds", "chai", "sinon-chai", "jquery", "underscore"
     ],
     "sources": {
       "curl": {
