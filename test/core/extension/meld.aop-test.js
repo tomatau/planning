@@ -19,26 +19,6 @@ describe('AOP', function () {
         app = {};
         AOP(app);
     });
-
-    afterEach(function () {
-    });
-
-    describe('multiple advice', function () {
-        it.skip('should add multiple advices', function () {
-            var ob = {
-                    fn: function(){
-                        return 'testString'
-                    }
-                };
-            app.aop.multi(ob, 'fn', {
-                around: function(joinpoint){
-                    var result = joinpoint.proceed(testData);
-                },
-                throwing: function(){}
-            });
-            ob.fn();
-        });
-    });
     
     describe('before', function () {
         it('should create advised functions', function () {
@@ -128,6 +108,36 @@ describe('AOP', function () {
                 originalFunction, throwingFunction
             )
             app.aop._super.afterThrowing.restore();
+        });
+    });
+
+    describe('multiple advice', function () {
+        it('should add multiple advices', function () {
+            var ob = {
+                    fn: function(){
+                        return 'testString'
+                    }
+                },
+                aroundFn = function(joinpoint){
+                    var result = joinpoint.proceed(testData);
+                },
+                throwingFn = function(){};
+            
+            sinon.stub(app.aop, '_super');
+
+            app.aop.multi(ob, 'fn', {
+                around: aroundFn,
+                throwing: throwingFn
+            });
+
+            app.aop._super.should.have.been.calledWith(
+                ob, 'fn', {
+                    around: aroundFn,
+                    afterThrowing: throwingFn
+                }
+            );
+            
+            app.aop._super.restore();
         });
     });
 });

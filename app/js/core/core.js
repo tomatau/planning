@@ -20,6 +20,8 @@ Core = function(config){
         instance: instanceFn,
         // events
         start: startFunction,
+        // 
+        module: moduleFn,
         //////////////
         // privates //
         //////////////
@@ -81,10 +83,18 @@ function contextFn(){
     return this._contexts[this._contextName()];
 }
 
+// this should also check the root context
 function instanceFn(name) {
     return this._context().instances[name];
 }
 
+function moduleFn(name) {
+    this._currentContext = name;
+    this._contexts[name] = {
+        registry: [],
+        instances: {}
+    }
+}
 /*
 
 laws of form:
@@ -106,6 +116,7 @@ size ~ return from previous ~ things provided
 
 // thinking...
 #############
+
 var config = {
     // map singleton usecase object literals directly onto app
     useCase: {
@@ -124,9 +135,7 @@ var config = {
     },
     
     // register a module, add extensions/useCases
-    module: function(){
-        
-    },
+        this makes no sense as we want to be able to register them later
 
     // view & model
     // some webapp extension
@@ -150,5 +159,64 @@ var config = {
             / post, get, put, delete
     ? web notifications
 }
+
+// 
+Core() -> app
+
+App
+    / use cases
+    start
+    register
+    instance
+    / extension
+    / module
+
+UI Use Case
+    show
+    hide
+    observe
+    notify
+
+Module
+    model
+    view
+    init
+
+Gateway Extension
+    collection
+        wrap around Array object
+    Entity [id]
+        get
+        create
+        / [id]entity
+            set/get
+            update(save)
+            delete
+
+AOP Extensions
+    before, after,
+    around, multi,
+    returning, throwing
+
+
+// desire:
+var Name = App.module('Name', { // use 'service' instead????
+    after: {
+        use.name: {
+           'something': init
+        }
+    }
+});
+
+Name.view();
+
+Name.model();
+
+export = Name;
+
+var Name = require('module/Name');
+
+Name.init(); // modules have init which is kinda like start
+// alternatively every module extends ui and has it's own start?
 
  */

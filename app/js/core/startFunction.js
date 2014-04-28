@@ -4,7 +4,6 @@ module.exports = function startFn() {
     // add all instances first
     context.registry.forEach(
         function(instance, index, array){
-            // add instance
             context.instances[instance.name] = instance.init(this);
         }.bind(this)
     );
@@ -15,6 +14,8 @@ module.exports = function startFn() {
             addAdvice.call(this, context, instance);
         }.bind(this)
     );
+
+    this.UI.start();
 }
 
 
@@ -24,15 +25,15 @@ module.exports = function startFn() {
  * @param {object} instance the current instance's configuration
  */
 function addAdvice(context, instance){
-    var thisInstance = this.instance(instance.name)
+    var thisInstance = context.instances[instance.name]
         ,adviceType
-        ,keySplit
+        ,innerKeySplit
+        ,adviceKeySplit
         ,targetInstance
         ,targetFunction
         ,advice
         ;
 
-    // go through each instance.aop
     if ( instance.advice != null ) {
         for ( adviceType in instance.advice ) {
             iterateOverAdviceTypes.call(this);
@@ -41,32 +42,39 @@ function addAdvice(context, instance){
     // - - - - - -
     function iterateOverAdviceTypes() {
         for ( adviceKey in instance.advice[adviceType] ) {
-            if ( (keySplit = adviceKey.split('.')).length > 1 ) {
-                if ( keySplit[0] === "use" ) {
+            if ( (adviceKeySplit = adviceKey.split('.')).length > 1 ) {
+                if ( adviceKeySplit[0] === "use" ) {
                     adviceOnUseCaseToCurrent.call(this);
                 } else { /* dot notation for something else */ }
             } else {
                 // if the key is on the instances... it must be the target
+            // TODO: should check root context if not current
                 if ( adviceKey in context.instances ) {
                     adviceOnOtherToCurrent.call(this);
                 } 
                 // if the key isn't on the instance, it must be a function on current
                 else {
-                    adviceOnThisToDestination.call(this);
+                    adviceOnCurrentToOther.call(this);
                 }
             }
         }
     }
 
     /**
-     * Add Advice On A Use Case to current instance
+     * Add Advice on a Use Case doing current instance function
      */
     function adviceOnUseCaseToCurrent(){
-        targetInstance = this[keySplit[1]];
+        // adviceKeySplit (targetInstance)
+        // / targetFunction
+        // 
+        // / adviceType
+        // thisInstance (destinationInstance)
+        // / destinationFunction
+        targetInstance = this[adviceKeySplit[1]];
+        destinationInstance = thisInstance;
 
         iterateAdviceObject(function(key, destinationFunction){
             targetFunction = key;
-            destinationInstance = thisInstance;
 
             advice = getAdvice( adviceType, destinationInstance, destinationFunction );
             this.aop.multi( targetInstance, targetFunction, advice );
@@ -74,14 +82,24 @@ function addAdvice(context, instance){
     }
 
     /**
-     * Add Advice On Another to current instance
+     * Add Advice on another instance doing current instance function
      */
     function adviceOnOtherToCurrent(){
+        // adviceKey (targetInstance)
+        // / targetFunction
+        // 
+        // 
+        // / adviceType
+        // thisOnstance (destinationInstance)
+        // / destinationFunction
+        // 
+        // / context
+                    // maybe root context instead???
         targetInstance = context.instances[adviceKey];
+        destinationInstance = thisInstance;
 
         iterateAdviceObject(function(key, destinationFunction){
             targetFunction = key;
-            destinationInstance = thisInstance;
 
             advice = getAdvice( adviceType, destinationInstance, destinationFunction );
             this.aop.multi( targetInstance, targetFunction, advice );
@@ -89,16 +107,24 @@ function addAdvice(context, instance){
     }
 
     /**
-     * Add Advice On The Current Instance to the destination
+     * Add Advice on the current instance doing another instance function
      */
-    function adviceOnThisToDestination(){
+    function adviceOnCurrentToOther(){
+        // thisInstance (targetInstance)
+        // adviceKey (targetFunction)
+        // 
+        // / adviceType
+        // (destinationInstance)
+        // (destinationFunction)
+        // 
+        // context
         targetInstance = thisInstance;
         targetFunction = adviceKey;
         
         iterateAdviceObject(function(key, destinationFunction){
-            destinationInstance = ( (keySplit = key.split('.')).length > 1 )
-                ? this[keySplit[1]]
-                : this.instance(key);
+            destinationInstance = ( (innerKeySplit = key.split('.')).length > 1 )
+                ? this[innerKeySplit[1]]
+                : context.instances[key];
 
             advice = getAdvice( adviceType, destinationInstance, destinationFunction );
             this.aop.multi( targetInstance, targetFunction, advice );

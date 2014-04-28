@@ -72,10 +72,10 @@ describe('Core Function', function () {
             testPreviousInstance = function(){};
         });
 
-        it('should create a default register context "root"', function () {
-            App.register.should.be.a('function');
-            App._contextName().should.eql('root');
-        });
+        // it('should create a default register context "root"', function () {
+        //     App.register.should.be.a('function');
+        //     App._contextName().should.eql('root');
+        // });
 
         it('should supply App to the registered callback on start', function (done) {
             registerConfig.init = function(app){
@@ -255,17 +255,57 @@ describe('Core Function', function () {
     /*
         Register sub contexts that add functionality
      */
-    describe.skip('Module Function', function(){
+    describe('Module Function', function(){
+        var App;
+
+        beforeEach(function () {
+            App = Core();
+        });
+
         it('should have a module register function', function () {
             Core().module.should.be.a('function');
         });
 
+        it.skip('should have a start function accepting entities and use cases', function () {
+            
+        });
+
         describe('Registered Modules', function () {
-            it('should make a new register context and set it as current', function () {
+            // it('should make a new register context and set it as current', function () {
+            //     App.module('TestModule');
+            //     App._contextName().should.eql('TestModule');
+            // });
+
+            // modules can be loaded after App.start
+            // .: they should have their own start function
+            // 
+            // they need use cases (always singletons)
+            // and entities
+            // can be passed in a config
+            describe('Module Contexts', function () {
                 
-            });
-            it('should register sub modules', function () {
+                beforeEach(function () {
+                    App = Core();
+                    App.module('TestModule');
+                });
+
+                it.skip('should protect against inter module communication', function () {
+                    
+                });
+
+                it.skip('should allow access to root context', function () {
+                    
+                });
+
+                it.skip('should register child contexts', function () {
+                    
+                });
+
+                it.skip('should allow access to parent and root context', function () {
+                    
+                });
                 
+                it.skip('should register sub modules', function () {});
             });
         });
 
