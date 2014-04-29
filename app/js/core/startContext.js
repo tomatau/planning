@@ -26,122 +26,76 @@ module.exports = function startFn(context) {
  * @param {object} instance the current instance's configuration
  */
 function addAdvice(context, instance){
-    var thisInstance = context.instances[instance.name]
-        ,adviceType
-        ,innerKeySplit
-        ,adviceKeySplit
-        ,targetInstance
-        ,targetFunction
-        ,advice
-        ;
+    var thisInstance = context.instances[instance.name];
+    
+    var aopMulti = function(targetInstance, targetFunction, advice){
+        this.aop.multi(targetInstance, targetFunction, advice);
+    }.bind(this);
+
+    var getUseCase = function(useCase){
+        return this[useCase];
+    }.bind(this);
+
 
     if ( instance.advice != null ) {
-        for ( adviceType in instance.advice ) {
-            iterateOverAdviceTypes.call(this);
-        }
+        iterateOverAdvice(instance.advice);
     }
+
     // - - - - - -
-    function iterateOverAdviceTypes() {
-        for ( adviceKey in instance.advice[adviceType] ) {
-            if ( (adviceKeySplit = adviceKey.split('.')).length > 1 ) {
-                if ( adviceKeySplit[0] === "use" ) {
-                    adviceOnUseCaseToCurrent.call(this);
-                } else { /* dot notation for something else */ }
-            } else {
-                // if the key is on the instances... it must be the target
-            // TODO: should check root context if not current
-                if ( adviceKey in context.instances ) {
-                    adviceOnOtherToCurrent.call(this);
-                } 
-                // if the key isn't on the instance, it must be a function on current
-                else {
-                    adviceOnCurrentToOther.call(this);
-                }
-            }
+
+    function iterateOverAdvice(advice){
+        for ( var type in advice ) {
+            iterateOverAdviceType( 
+                advice[type], type
+            );
         }
     }
 
-    /**
-     * Add Advice on a Use Case doing current instance function
-     */
-    function adviceOnUseCaseToCurrent(){
-        // adviceKeySplit (targetInstance)
-        // / targetFunction
-        // 
-        // / adviceType
-        // thisInstance (destinationInstance)
-        // / destinationFunction
-        targetInstance = this[adviceKeySplit[1]];
-        destinationInstance = thisInstance;
-
-        iterateAdviceObject(function(key, destinationFunction){
-            targetFunction = key;
-
-            advice = getAdvice( adviceType, destinationInstance, destinationFunction );
-            this.aop.multi( targetInstance, targetFunction, advice );
-        }.bind(this));   
-    }
-
-    /**
-     * Add Advice on another instance doing current instance function
-     */
-    function adviceOnOtherToCurrent(){
-        // adviceKey (targetInstance)
-        // / targetFunction
-        // 
-        // 
-        // / adviceType
-        // thisOnstance (destinationInstance)
-        // / destinationFunction
-        // 
-        // / context
-                    // maybe root context instead???
-        targetInstance = context.instances[adviceKey];
-        destinationInstance = thisInstance;
-
-        iterateAdviceObject(function(key, destinationFunction){
-            targetFunction = key;
-
-            advice = getAdvice( adviceType, destinationInstance, destinationFunction );
-            this.aop.multi( targetInstance, targetFunction, advice );
-        }.bind(this));
-    }
-
-    /**
-     * Add Advice on the current instance doing another instance function
-     */
-    function adviceOnCurrentToOther(){
-        // thisInstance (targetInstance)
-        // adviceKey (targetFunction)
-        // 
-        // / adviceType
-        // (destinationInstance)
-        // (destinationFunction)
-        // 
-        // context
-        targetInstance = thisInstance;
-        targetFunction = adviceKey;
-        
-        iterateAdviceObject(function(key, destinationFunction){
-            destinationInstance = ( (innerKeySplit = key.split('.')).length > 1 )
-                ? this[innerKeySplit[1]]
-                : context.instances[key];
-
-            advice = getAdvice( adviceType, destinationInstance, destinationFunction );
-            this.aop.multi( targetInstance, targetFunction, advice );
-        }.bind(this));
-    }
-
-    // Iterate over the current advice object
-    function iterateAdviceObject(callback) {
-        for ( var adviceValuePair in instance.advice[adviceType][adviceKey] )
-            callback(
-                adviceValuePair, instance.advice[adviceType][adviceKey][adviceValuePair]
+    function iterateOverAdviceType(advice, type) {
+        for ( var target in advice ) {
+            addAdvice(
+                target, advice[target], type
             );
+        }
     }
 
-    function getAdvice(type, instance, callbackName) {
-        var adv = {};
-        return adv[type] = instance[callbackName], adv;
+    function addAdvice(target, destination, type) {
+        var targetInstance, targetFunction,  destinationFunction,
+            targetSplit;
+        if ( (targetSplit = target.split(' ')).length > 1 ) {
+            targetInstance = getTargetInstance(targetSplit)
+            targetFunction = targetSplit[1];
+            destinationFunction = getAdvice(type, thisInstance[destination]);
+        } else {
+            targetInstance = thisInstance;
+            targetFunction = target;
+            destinationFunction = getOtherAdvice(type, destination)
+        }
+        aopMulti(
+            targetInstance,
+            targetFunction,
+            destinationFunction
+        )
+    }
+
+    function getTargetInstance(targetSplit){
+        var caseSplit;
+        return ((caseSplit = targetSplit[0].split('.')).length > 1 )
+            ? getUseCase(caseSplit[1])
+            : context.instances[targetSplit[0]];
+    }
+
+    function getAdvice(type, destinationFunction){
+        var advice = {};
+        advice[type] = destinationFunction;
+        return advice;
+    }
+
+    function getOtherAdvice(type, destination){
+        var destination = destination.split(' ');
+        return getAdvice(type, ( (caseSplit = destination[0].split('.')).length > 1 )
+            ? getUseCase(caseSplit[1])[destination[1]]
+            : context.instances[destination[0]][destination[1]]
+        );
     }
 }
