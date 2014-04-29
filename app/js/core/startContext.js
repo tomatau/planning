@@ -1,5 +1,6 @@
-module.exports = function startFn() {
-    var context = this._context();
+module.exports = function startFn(context) {
+    // var args = ['context', 'rootContext', 'parentContext'];
+    //  // maybe a 'get from context instead?'
 
     // add all instances first
     context.registry.forEach(

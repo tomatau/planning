@@ -3,7 +3,7 @@ var Core;
 require('utilities/argsToArr');
 
 // core functions
-var startFunction = require('core/startFunction');
+var startContext = require('core/startContext');
 
 // Use Cases and Extensions
 var UI = require('core/use-case/ui')
@@ -12,29 +12,21 @@ var UI = require('core/use-case/ui')
     ;
 
 // load the config
-Core = function(config){
+module.exports = Core = function(config){
     // build the core
     var app = {
         // registration
         register: registerFn,
         instance: instanceFn,
         // events
-        start: startFunction,
-        // 
-        module: moduleFn,
-        //////////////
-        // privates //
-        //////////////
-        _contexts: {
-            root: {
-                registry: [],
-                instances: {}
-            }
+        start: function(){
+            startContext.call(this, getCurrentContext());
         },
-        _contextName: contextNameFn,
-        _context: contextFn,
+        // module / service
+        module: moduleFn
     };
 
+    // make use cases first class properties?
     app.UI = UI(app);
     
     var itr;
@@ -48,7 +40,7 @@ Core = function(config){
     // go through each use case and add it
     if ( config && config.useCase != null ) {
         for (itr in config.useCase) {
-            app[itr] = config.useCase[itr];
+            app[itr] = config.useCase[itr](app);
         }
     }
 
@@ -62,39 +54,48 @@ Core = function(config){
     return app;
 }
 
-////////////
-// export //
-////////////
-module.exports = Core;
-
 ///////////////
 // Functions //
 ///////////////
 function registerFn(config) {
-    var context = this._context();
+    var context = getCurrentContext();
     context.registry.push(config);
-}
-
-function contextNameFn() {
-    return this._currentContext != null ? this._currentContext : 'root';
-}
-
-function contextFn(){
-    return this._contexts[this._contextName()];
 }
 
 // this should also check the root context
 function instanceFn(name) {
-    return this._context().instances[name];
+    return getCurrentContext().instances[name];
 }
 
 function moduleFn(name) {
-    this._currentContext = name;
-    this._contexts[name] = {
+    currentContext = name;
+    contexts[name] = {
         registry: [],
         instances: {}
     }
 }
+
+
+/////////////
+// Private //
+/////////////
+var contexts = {
+    root: {
+        registry: [],
+        instances: {}
+    }
+};
+
+var currentContext;
+
+function getContextName() {
+    return currentContext != null ? currentContext : 'root';
+}
+
+function getCurrentContext(){
+    return contexts[getContextName()];
+}
+
 /*
 
 laws of form:
@@ -177,7 +178,7 @@ UI Use Case
     observe
     notify
 
-Module
+Module / Service
     model
     view
     init

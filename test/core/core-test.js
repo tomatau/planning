@@ -25,7 +25,7 @@ describe('Core Function', function () {
             var testUseCase = {},
                 testConfig = {
                     useCase: {
-                        testUseCase: testUseCase
+                        testUseCase: function(app){ return testUseCase }
                     }
                 };
             Core(testConfig).testUseCase.should.equal(testUseCase);
