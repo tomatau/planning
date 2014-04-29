@@ -124,6 +124,7 @@ The AOP can access any root UseCases as well as any 'root' instances although th
 require them into the application via the core or module config.
 
 There is a default UI use case as most things need some form of interface; this can be wired up to some repl, gui or even have ajax events triggered by it... WHATVER.
+
 ```javascript
 module.exports = UI = function(app){
     return {
@@ -188,6 +189,7 @@ function(app){ // app instance here is current module
 ```
 
 e.g. implement some error handling from ui interactions:
+
 ```javascript
 var ErrorMessageComponent = function(args){
     this.helper = args.helper;
@@ -209,6 +211,7 @@ function(app){
 ```
 
 e.g. obj literal component with multiple advice
+
 ```javascript
 HerpModule.model('Donkeys', 
 {

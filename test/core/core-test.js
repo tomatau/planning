@@ -6,7 +6,7 @@ var expect = chai.expect;
     Main Premise:
     - Use Cases provide high level business logic
     - Entities provide low level business logic
-    - Modules provide groups of business logic
+    - Modules provide groups of business sub logic
     - Artisitc value isn't measurable i.e. not in business logic (observer paradox)
     - .: Views (model/template/event) should be tested in visual isolation
     - Extensions encapsulate services
