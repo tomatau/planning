@@ -61,7 +61,8 @@ function addAdvice(context, instance){
 
     function addAdvice(target, destination, type) {
         var targetInstance, targetFunction,  destinationFunction,
-            targetSplit;
+            targetSplit; // try to remove this
+
         if ( (targetSplit = target.split(' ')).length > 1 ) {
             targetInstance = getTargetInstance(targetSplit)
             targetFunction = targetSplit[1];
@@ -92,7 +93,7 @@ function addAdvice(context, instance){
     }
 
     function getOtherAdvice(type, destination){
-        var destination = destination.split(' ');
+        destination = destination.split(' ');
         return getAdvice(type, ( (caseSplit = destination[0].split('.')).length > 1 )
             ? getUseCase(caseSplit[1])[destination[1]]
             : context.instances[destination[0]][destination[1]]
