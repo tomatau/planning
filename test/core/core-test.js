@@ -102,11 +102,6 @@ describe('Core Function', function () {
         });
 
         describe('Registered Modules', function () {
-            // it('should make a new register context and set it as current', function () {
-            //     App.module('TestModule');
-            //     App._contextName().should.eql('TestModule');
-            // });
-
             // modules can be loaded after App.start
             // .: they should have their own start function
             // 
