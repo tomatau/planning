@@ -3,7 +3,7 @@ curl( [
 ], start, fail );
 
 function start(App){
-    log('started', App)
+    console.log('started', App)
 }
 
 function fail(ex){

@@ -36,11 +36,11 @@
 
                 /* tomatao
                 ########### */
-                ,'log': {
-                    location: tomataoPath + 'log',
+                ,'console': {
+                    location: tomataoPath + 'console',
                     config: {
                         loader: loaderPath + 'legacy',
-                        exports: 'log'
+                        exports: 'console'
                     }
                 }
                 ,'argsToArr': {

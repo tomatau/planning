@@ -13,10 +13,20 @@ UI = function(app){
         //  probably do though as AOP doesn't condition on the arguments passed in
         //      trigger can
         show: function(item){
-            this.trigger.apply(this, ['show:' + item].concat(argsToArr(arguments, 1)) );
+            this.trigger.apply(
+                this, ['show:' + item].concat(
+                    argsToArr(arguments, 1)
+                    // Array.prototype.slice.call(arguments, 1)
+                )
+            );
         },
         hide: function(item){
-            this.trigger.apply(this, ['hide:' + item].concat(argsToArr(arguments, 1)) );
+            this.trigger.apply(
+                this, ['hide:' + item].concat(
+                    argsToArr(arguments, 1)
+                    // Array.prototype.slice.call(arguments, 1)
+                )
+            );
         },
         trigger: function(name){} // could extend a base entity class
     }

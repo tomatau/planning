@@ -12,7 +12,7 @@ require.config({
         sinonChai: 'bower_components/sinon-chai/lib/sinon-chai'
     }
 });
-require([ 'chai', 'sinonChai', 'sinon', 'utilities/log' ], 
+require([ 'chai', 'sinonChai', 'sinon' ], 
     function( chai, sinonChai ){
         // make test tools globally available
         window.chai = chai;
