@@ -5,7 +5,7 @@ require.config({
     baseUrl: '../',
     paths: {
         // utils
-        utilities: 'app/js/utilities',
+        a2a: 'utilities/a2a',
         // testing only
         chai: 'bower_components/chai/chai',
         sinon: 'bower_components/sinon-builds/pkg/sinon-1.8.2', // bower sinon has no spy

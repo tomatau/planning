@@ -44,7 +44,7 @@
                     }
                 }
                 ,'a2a': {
-                    location: tomataoPath + 'utilities/a2a',
+                    location: 'utilities/a2a',
                     config: {
                         loader: loaderPath + 'cjsm11'
                     }
@@ -57,13 +57,6 @@
                 'core': {
                     location: 'core/',
                     main: 'core',
-                    config: {
-                        loader: loaderPath + 'cjsm11',
-                    }
-                },
-
-                'utilities': {
-                    location: 'utilities/',
                     config: {
                         loader: loaderPath + 'cjsm11',
                     }
