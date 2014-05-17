@@ -43,11 +43,10 @@
                         exports: 'console'
                     }
                 }
-                ,'argsToArr': {
-                    location: tomataoPath + 'argsToArr',
+                ,'a2a': {
+                    location: tomataoPath + 'utilities/a2a',
                     config: {
-                        loader: loaderPath + 'legacy',
-                        exports: 'argsToArr'
+                        loader: loaderPath + 'cjsm11'
                     }
                 }
             },

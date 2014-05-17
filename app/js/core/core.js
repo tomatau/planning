@@ -1,8 +1,5 @@
 var Core;
 
-// want to remove these inter module deps
-require('utilities/argsToArr');
-
 // core functions
 var startContext = require('./startContext');
 
@@ -28,13 +25,13 @@ module.exports = Core = function(config){
     };
 
     // make use cases first class properties?
-// kind of want to remove this dude too
-// also, yes, namespace to use cases... really 
+    // kind of want to remove this dude too
+    // also, yes, namespace to use cases... really 
     app.UI = UI(app);
     
     var itr;
 
-// want to remove these from here really
+    // want to remove these from here really
     defaultAOP(app);
     defaultGateway(app);
 

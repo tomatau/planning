@@ -1,6 +1,6 @@
 var UI;
 // want to remove these inter module deps
-require('utilities/argsToArr');
+var a2a = require('a2a');
 /* 
 - acts as a boundary providing hooks for modules
 ############## */
@@ -15,16 +15,14 @@ UI = function(app){
         show: function(item){
             this.trigger.apply(
                 this, ['show:' + item].concat(
-                    argsToArr(arguments, 1)
-                    // Array.prototype.slice.call(arguments, 1)
+                    a2a(arguments, 1)
                 )
             );
         },
         hide: function(item){
             this.trigger.apply(
                 this, ['hide:' + item].concat(
-                    argsToArr(arguments, 1)
-                    // Array.prototype.slice.call(arguments, 1)
+                    a2a(arguments, 1)
                 )
             );
         },
